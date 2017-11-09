@@ -9,6 +9,7 @@ import com.yhl.rpc.common.RpcMessageEncoder;
 import com.yhl.rpc.common.RpcService;
 import com.yhl.rpc.common.RpcServiceRegister;
 import com.yhl.rpc.common.RpcServiceRequest;
+import com.yhl.rpc.server.servicehandler.ServiceImplHandlerManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -43,6 +45,8 @@ public class RpcNettyServer implements ApplicationContextAware, InitializingBean
 
     private boolean inited;
     private int port;
+    @Autowired
+    private ServiceImplHandlerManager serviceHandlerManager;
     private RpcDispatcher dispatcher;
     private RpcServiceRegister rpcServiceRegister;
     private Map<String, Object> serviceMap = Maps.newHashMap();
@@ -63,7 +67,7 @@ public class RpcNettyServer implements ApplicationContextAware, InitializingBean
         for (Class<?> i : interfaces) {
             String interfaceName = i.getName();
             LOGGER.debug("interfaceName is {}", interfaceName);
-            return interfaceName;
+            return interfaceName;  // 这里只有RPCService一个接口，所以直接返回
         }
         return null;
     }
@@ -79,7 +83,8 @@ public class RpcNettyServer implements ApplicationContextAware, InitializingBean
             }
         }
         LOGGER.info("afterPropertiesSet, serviceMap is:{}", serviceMap);
-        dispatcher = new RpcDispatcher(serviceMap);
+        serviceHandlerManager.init();
+        dispatcher = new RpcDispatcher(serviceHandlerManager);
         start();
     }
 

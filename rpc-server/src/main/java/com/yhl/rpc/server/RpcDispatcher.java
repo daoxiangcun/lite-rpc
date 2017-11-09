@@ -3,6 +3,7 @@ package com.yhl.rpc.server;
 import com.yhl.rpc.common.Constants;
 import com.yhl.rpc.common.RpcServiceRequest;
 import com.yhl.rpc.common.RpcServiceResponse;
+import com.yhl.rpc.server.servicehandler.ServiceImplHandlerManager;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +16,11 @@ import java.util.concurrent.TimeUnit;
 
 public class RpcDispatcher {
     private static Logger LOGGER = LoggerFactory.getLogger(RpcDispatcher.class);
-    private Map<String, Object> classNameBeanMap;
+    private ServiceImplHandlerManager serviceImplHandlerManager;
     private ThreadPoolExecutor executor = null;
 
-    public RpcDispatcher(Map<String, Object> classNameBeanMap) {
-        this.classNameBeanMap = classNameBeanMap;
+    public RpcDispatcher(ServiceImplHandlerManager serviceImplHandlerManager) {
+        this.serviceImplHandlerManager = serviceImplHandlerManager;
         executor = new ThreadPoolExecutor(20, 20, 0, TimeUnit.MILLISECONDS, new LinkedBlockingDeque<Runnable>());
     }
 
@@ -38,16 +39,14 @@ public class RpcDispatcher {
                 Object[] params = request.getParams();
                 Object result = null;
                 try {
-                    Class<?> serviceClass = Class.forName(className);
-                    Method method = serviceClass.getMethod(methodName, paramTypes);
-                    result = method.invoke(classNameBeanMap.get(className), params);
+                    result = serviceImplHandlerManager.handle(className, methodName, paramTypes, params);
                 } catch (Exception e) {
                     LOGGER.error("exception happen when dispatch:{}", e.getMessage(), e);
                 }
                 RpcServiceResponse response = new RpcServiceResponse();
                 response.setRequestId(request.getRequestId());
-                response.setErrCode(result != null ? Constants.ERR_CODE_OK : Constants.ERR_CODE_CANCEL);
-                LOGGER.info("RpcDispatcher, result={}", result);
+                response.setErrCode(result != null ? Constants.ERR_CODE_OK : Constants.ERR_CODE_ERROR);
+                LOGGER.info("RpcDispatcher, result = {}", result);
                 if (result != null) {
                     response.setResponse(result);
                 }
