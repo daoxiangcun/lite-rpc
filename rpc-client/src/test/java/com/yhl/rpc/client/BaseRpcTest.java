@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by yuhongliang on 17-8-14.
+ * Created by daoxiangcun on 17-8-14.
  */
 class BaseRpcTest {
     protected static Logger LOGGER = LoggerFactory.getLogger(BaseRpcTest.class);

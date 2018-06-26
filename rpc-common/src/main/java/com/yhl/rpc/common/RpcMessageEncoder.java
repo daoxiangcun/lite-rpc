@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * !!! 这里报错经常会没有错误栈，需要注意
- * Created by yuhongliang on 17-7-31.
+ * Created by daoxiangcun on 17-7-31.
  */
 public class RpcMessageEncoder extends MessageToByteEncoder{
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcMessageEncoder.class);

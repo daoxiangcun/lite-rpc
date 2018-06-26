@@ -2,7 +2,7 @@ package com.yhl.rpc.client;
 
 import com.yhl.rpc.common.NettyChannel;
 import com.yhl.rpc.common.RpcFuture;
-import com.yhl.rpc.common.RpcServiceResponse;
+import com.yhl.rpc.common.model.RpcServiceResponse;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ public class RpcNettyClientHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        RpcServiceResponse response = (RpcServiceResponse)msg;
+        RpcServiceResponse response = (RpcServiceResponse) msg;
         LOGGER.info("channelRead, response:{}, result:{}", response, response.getResponse());
         RpcFuture.received(NettyChannel.getOrAddChannel(ctx.channel()), response);
     }

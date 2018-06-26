@@ -1,8 +1,8 @@
 package com.yhl.rpc.server;
 
-import com.yhl.rpc.common.NetUtils;
+import com.yhl.rpc.common.utils.NetUtils;
 import com.yhl.rpc.common.NettyChannel;
-import com.yhl.rpc.common.RpcServiceRequest;
+import com.yhl.rpc.common.model.RpcServiceRequest;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ReferenceCountUtil;

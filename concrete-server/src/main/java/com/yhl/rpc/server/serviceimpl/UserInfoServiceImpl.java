@@ -2,7 +2,10 @@ package com.yhl.rpc.server.serviceimpl;
 
 import com.google.common.collect.Maps;
 import com.yhl.rpc.common.RpcService;
-import com.yhl.rpc.common.inf.IUserInfoService;
+import com.yhl.rpc.inf.IUserInfoService;
+import com.yhl.rpc.server.servicehandler.AbstractServiceImplHandler;
+import com.yhl.rpc.server.servicehandler.IRpcServiceHandler;
+import com.yhl.rpc.server.servicehandler.UserInfoServiceImplHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,11 +13,12 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by yuhongliang on 17-8-2.
+ * Created by daoxiangcun on 17-8-2.
  */
 @RpcService
-public class UserInfoServiceImpl implements IUserInfoService {
+public class UserInfoServiceImpl implements IUserInfoService, IRpcServiceHandler {
     private static Logger LOGGER = LoggerFactory.getLogger(UserInfoServiceImpl.class);
+    UserInfoServiceImplHandler userHandler = new UserInfoServiceImplHandler(this);
 
     @Override
     public HashMap<String, String> getProcessPayByProcessId(String logId, long xiaomiId, String processKey, byte currency) {
@@ -33,5 +37,10 @@ public class UserInfoServiceImpl implements IUserInfoService {
         result.put("orderId", UUID.randomUUID().toString());
         result.put("time", String.valueOf(System.currentTimeMillis()));
         return result;
+    }
+
+    @Override
+    public AbstractServiceImplHandler getServiceHandler() {
+        return userHandler;
     }
 }

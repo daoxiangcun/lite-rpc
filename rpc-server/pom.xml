@@ -12,6 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.infra.rpc</groupId>
     <artifactId>rpc-server</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

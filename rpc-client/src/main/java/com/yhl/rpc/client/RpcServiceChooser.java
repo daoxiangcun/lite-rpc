@@ -3,8 +3,8 @@ package com.yhl.rpc.client;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.xiaomi.miliao.zookeeper.ZKChildListener;
-import com.yhl.rpc.common.RpcServerInfo;
-import com.yhl.rpc.common.ZookeeperUtils;
+import com.yhl.rpc.common.model.RpcServerInfo;
+import com.yhl.rpc.common.utils.ZookeeperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,8 +17,8 @@ import java.util.Random;
 /**
  * 从zk上获取提供服务的ip和port
  * zk上路径类似:
- *          /rpcservices/com.xiaomi.miui.mibi.service.MibiService
- * Created by yuhongliang on 17-7-31.
+ * /rpcservices/com.yhl.xx.xx.service.xxService
+ * Created by daoxiangcun on 17-7-31.
  */
 @Service
 public class RpcServiceChooser {
@@ -39,7 +39,7 @@ public class RpcServiceChooser {
         List<String> children = zkUtils.getZkClient().getChildrenNames(ZK_RPC_ROOT);
         LOGGER.info("children is:{}", children);
         if (children != null && children.size() > 0) {
-            for(String one:children) {
+            for (String one : children) {
                 final String servicePath = ZK_RPC_ROOT + "/" + one;
                 LOGGER.info("servicePath={}", servicePath);
                 List<RpcServerInfo> serverList = listServersFromZkOfService(servicePath);
@@ -61,7 +61,7 @@ public class RpcServiceChooser {
         String poolPath = servicePath + "/pool";
         List<String> children = zkUtils.getZkClient().getChildrenNames(poolPath);
         if (children != null && children.size() > 0) {
-            for(String one:children) {
+            for (String one : children) {
                 String ip = one.split(":")[0];
                 String port = one.split(":")[1];
                 RpcServerInfo info = new RpcServerInfo();

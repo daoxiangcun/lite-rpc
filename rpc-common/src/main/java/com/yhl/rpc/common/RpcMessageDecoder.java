@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by yuhongliang on 17-7-31.
+ * Created by daoxiangcun on 17-7-31.
  */
 public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcMessageDecoder.class);

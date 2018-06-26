@@ -1,10 +1,11 @@
 package com.yhl.rpc.common;
 
+import com.yhl.rpc.common.utils.ZookeeperUtils;
 import org.slf4j.LoggerFactory;
 
 /**
  * 注册服务到zk上
- * Created by yuhongliang on 17-7-31.
+ * Created by daoxiangcun on 17-7-31.
  */
 public class RpcServiceRegister {
     private static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(RpcServiceRegister.class);

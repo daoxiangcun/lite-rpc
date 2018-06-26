@@ -1,13 +1,16 @@
 package com.yhl.rpc.common;
 
-import com.xiaomi.miliao.common.ConcurrentHashSet;
+import com.google.common.collect.Sets;
 import com.yhl.rpc.common.inf.IRpcResponseListener;
+import com.yhl.rpc.common.model.RpcServiceRequest;
+import com.yhl.rpc.common.model.RpcServiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,7 +19,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Created by yuhongliang on 17-7-31.
+ * Created by daoxiangcun on 17-7-31.
  */
 public class RpcFuture {
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcFuture.class);
@@ -34,7 +37,7 @@ public class RpcFuture {
     private final Condition done = lock.newCondition();
     private RpcServiceResponse response;
 
-    private static ConcurrentHashSet<String> sFailedSessionId = new ConcurrentHashSet<String>();
+    private static Set<String> sFailedSessionId = Sets.newConcurrentHashSet();
     private IRpcResponseListener respListener;
 
     public RpcFuture(NettyChannel channel, RpcServiceRequest request) {

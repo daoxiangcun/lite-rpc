@@ -1,9 +1,8 @@
 package com.yhl.rpc.client;
 
-import com.yhl.rpc.common.Constants;
 import com.yhl.rpc.common.RpcFuture;
-import com.yhl.rpc.common.RpcServerInfo;
-import com.yhl.rpc.common.RpcServiceRequest;
+import com.yhl.rpc.common.model.RpcServerInfo;
+import com.yhl.rpc.common.model.RpcServiceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

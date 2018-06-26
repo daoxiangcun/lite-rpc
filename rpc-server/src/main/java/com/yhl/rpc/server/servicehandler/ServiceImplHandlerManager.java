@@ -1,32 +1,34 @@
 package com.yhl.rpc.server.servicehandler;
 
-import com.google.common.collect.Maps;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by yuhongliang on 17-11-8.
+ * Created by daoxiangcun on 17-11-8.
  */
 @Service
 public class ServiceImplHandlerManager {
-    private HashMap<String, AbstractServiceImplHandler> serviceImplHandlerMap = Maps.newHashMap();
+    ServiceImplHandlerRegistry registry;
 
-    @Autowired
-    private HelloServiceImplHandler helloServiceImplHandler;
-
-    @Autowired
-    private UserInfoServiceImplHandler userInfoServiceImplHandler;
-
-    public void init() {
-        // 在map中加上接口的名称与接口处理类的映射
-        serviceImplHandlerMap.put("com.yhl.rpc.common.inf.IHelloService", helloServiceImplHandler);
-        serviceImplHandlerMap.put("com.yhl.rpc.common.inf.IUserInfoService", userInfoServiceImplHandler);
+    /**
+     * 初始化，将RpcService对应的接口名与serivceHandler注册到registry上
+     *
+     * @param serviceMap
+     */
+    public void init(Map<String, Object> serviceMap) {
+        registry = new ServiceImplHandlerRegistry();
+        for (Map.Entry<String, Object> entry : serviceMap.entrySet()) {
+            String infName = entry.getKey();
+            Object serviceImpl = entry.getValue();
+            if (serviceImpl instanceof IRpcServiceHandler) {
+                registry.register(infName, ((IRpcServiceHandler) serviceImpl).getServiceHandler());
+            }
+        }
     }
 
     public Object handle(String interfaceName, String methodName, Class<?>[] paramTypes, Object[] params) throws Exception {
-        AbstractServiceImplHandler handler = serviceImplHandlerMap.get(interfaceName);
+        AbstractServiceImplHandler handler = registry.getHandlerByInfFullName(interfaceName);
         if (handler != null) {
             return handler.handle(methodName, paramTypes, params);
         }
