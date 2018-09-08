@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by daoxiangcun on 17-7-31.
  */
-public class ProtoStuffSerialize implements IRpcSerialize {
+public class ProtoStuffSerialize {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtoStuffSerialize.class);
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<Class<?>, Schema<?>>();
 
