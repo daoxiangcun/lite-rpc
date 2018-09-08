@@ -4,9 +4,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.yhl.rpc.common.RpcException;
 import com.yhl.rpc.common.RpcFuture;
-import com.yhl.rpc.common.RpcServerInfo;
-import com.yhl.rpc.common.RpcServiceRequest;
-import com.yhl.rpc.common.RpcServiceResponse;
+import com.yhl.rpc.common.model.RpcServerInfo;
+import com.yhl.rpc.common.model.RpcServiceRequest;
+import com.yhl.rpc.common.model.RpcServiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class RpcAgentPool {
 
     private boolean openAndConnect(RpcAgent client) {
         int tryTimes = 0;
-        while(!client.isConnected()) {
+        while (!client.isConnected()) {
             client.connect();
             if (tryTimes > 3) {
                 return false;
@@ -93,7 +93,7 @@ public class RpcAgentPool {
             throw new RpcException(errMsg);
         }
         try {
-            return (RpcServiceResponse)client.syncSendRpcServiceRequest(request, timeout);
+            return (RpcServiceResponse) client.syncSendRpcServiceRequest(request, timeout);
         } catch (Exception e) {
             LOGGER.error("exception happen:{}", e.getMessage(), e);
             throw new RpcException(e);

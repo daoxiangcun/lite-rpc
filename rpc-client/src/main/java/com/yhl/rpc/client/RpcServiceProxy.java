@@ -2,9 +2,9 @@ package com.yhl.rpc.client;
 
 import com.yhl.rpc.common.RpcException;
 import com.yhl.rpc.common.RpcFuture;
-import com.yhl.rpc.common.RpcServerInfo;
-import com.yhl.rpc.common.RpcServiceRequest;
-import com.yhl.rpc.common.RpcServiceResponse;
+import com.yhl.rpc.common.model.RpcServerInfo;
+import com.yhl.rpc.common.model.RpcServiceRequest;
+import com.yhl.rpc.common.model.RpcServiceResponse;
 import com.yhl.rpc.common.inf.IRpcResponseListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.lang.reflect.Proxy;
 import java.util.UUID;
 
 /**
- * Created by yuhongliang on 17-7-31.
+ * Created by daoxiangcun on 17-7-31.
  */
 @Service
 public class RpcServiceProxy {
@@ -30,13 +30,13 @@ public class RpcServiceProxy {
     @Autowired
     RpcAgentPool rpcAgentPool;
 
-    public<T> T syncCreate(Class<?> infClazz) throws RpcException {
+    public <T> T syncCreate(Class<?> infClazz) throws RpcException {
         final RpcServerInfo serverInfo = rpcServiceChooser.chooseOneServer(infClazz.getName());
         if (serverInfo == null) {
             LOGGER.error("syncCreate, serverInfo is null");
             return null;
         }
-        return (T)Proxy.newProxyInstance(infClazz.getClassLoader(), new Class<?>[]{infClazz}, new InvocationHandler() {
+        return (T) Proxy.newProxyInstance(infClazz.getClassLoader(), new Class<?>[]{infClazz}, new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 RpcServiceRequest request = new RpcServiceRequest();
@@ -64,7 +64,7 @@ public class RpcServiceProxy {
         });
     }
 
-    public<T> AsyncProxyWrapper<T> asyncCreate(Class<?> infClazz) {
+    public <T> AsyncProxyWrapper<T> asyncCreate(Class<?> infClazz) {
         final AsyncProxyWrapper<T> proxyWrapper = new AsyncProxyWrapper<T>();
 
         final RpcServerInfo serverInfo = rpcServiceChooser.chooseOneServer(infClazz.getName());
@@ -72,7 +72,7 @@ public class RpcServiceProxy {
             LOGGER.error("asyncCreate, serverInfo is null");
             return null;
         }
-        T proxy =  (T)Proxy.newProxyInstance(infClazz.getClassLoader(), new Class<?>[]{infClazz}, new InvocationHandler() {
+        T proxy = (T) Proxy.newProxyInstance(infClazz.getClassLoader(), new Class<?>[]{infClazz}, new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 RpcServiceRequest request = new RpcServiceRequest();
@@ -93,7 +93,7 @@ public class RpcServiceProxy {
         return proxyWrapper;
     }
 
-    public<T> AsyncProxyWrapper<T> asyncCreateWithListener(Class<?> infClazz) {
+    public <T> AsyncProxyWrapper<T> asyncCreateWithListener(Class<?> infClazz) {
         final AsyncProxyWrapper<T> proxyWrapper = new AsyncProxyWrapper<T>();
 
         final RpcServerInfo serverInfo = rpcServiceChooser.chooseOneServer(infClazz.getName());
@@ -101,7 +101,7 @@ public class RpcServiceProxy {
             LOGGER.error("asyncCreate, serverInfo is null");
             return null;
         }
-        T proxy =  (T)Proxy.newProxyInstance(infClazz.getClassLoader(), new Class<?>[]{infClazz}, new InvocationHandler() {
+        T proxy = (T) Proxy.newProxyInstance(infClazz.getClassLoader(), new Class<?>[]{infClazz}, new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 RpcServiceRequest request = new RpcServiceRequest();
@@ -112,9 +112,9 @@ public class RpcServiceProxy {
                 request.setParams(args);
 
                 int argLen = args.length;
-                Object lastArg = args[argLen-1];
+                Object lastArg = args[argLen - 1];
                 if (lastArg instanceof IRpcResponseListener) {
-                    proxyWrapper.listener = (IRpcResponseListener)lastArg;
+                    proxyWrapper.listener = (IRpcResponseListener) lastArg;
                 }
                 RpcFuture future = rpcAgentPool.sendRequestAsync(serverInfo, request);
 //                future.addListener(proxyWrapper.listener);

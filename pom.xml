@@ -12,5 +12,7 @@
         <module>rpc-common</module>
         <module>rpc-server</module>
         <module>rpc-client</module>
+        <module>concrete-interface</module>
+        <module>concrete-server</module>
     </modules>
 </project>

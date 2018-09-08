@@ -1,7 +1,7 @@
 package com.yhl.rpc.common;
 
 /**
- * Created by yuhongliang on 17-8-17.
+ * Created by daoxiangcun on 17-8-17.
  */
 public interface Constants {
     int DEFAULT_TIMEOUT = 5000;

@@ -1,15 +1,13 @@
 package com.yhl.rpc.server;
 
 import com.yhl.rpc.common.Constants;
-import com.yhl.rpc.common.RpcServiceRequest;
-import com.yhl.rpc.common.RpcServiceResponse;
+import com.yhl.rpc.common.model.RpcServiceRequest;
+import com.yhl.rpc.common.model.RpcServiceResponse;
 import com.yhl.rpc.server.servicehandler.ServiceImplHandlerManager;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

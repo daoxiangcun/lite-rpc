@@ -1,7 +1,7 @@
 package com.yhl.rpc.client;
 
 /**
- * Created by yuhongliang on 17-8-7.
+ * Created by daoxiangcun on 17-8-7.
  */
 
 import org.junit.runners.model.InitializationError;

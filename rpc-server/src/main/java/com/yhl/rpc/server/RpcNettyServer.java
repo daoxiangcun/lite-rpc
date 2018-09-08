@@ -2,20 +2,14 @@ package com.yhl.rpc.server;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.xiaomi.miliao.utils.NetworkUtil;
-import com.yhl.rpc.common.NettyChannel;
-import com.yhl.rpc.common.RpcMessageDecoder;
-import com.yhl.rpc.common.RpcMessageEncoder;
-import com.yhl.rpc.common.RpcService;
-import com.yhl.rpc.common.RpcServiceRegister;
-import com.yhl.rpc.common.RpcServiceRequest;
+import com.yhl.rpc.common.*;
+import com.yhl.rpc.common.codec.RpcMessageDecoder;
+import com.yhl.rpc.common.codec.RpcMessageEncoder;
+import com.yhl.rpc.common.model.RpcServiceRequest;
+import com.yhl.rpc.common.utils.NetUtils;
 import com.yhl.rpc.server.servicehandler.ServiceImplHandlerManager;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
@@ -40,7 +34,6 @@ public class RpcNettyServer implements ApplicationContextAware, InitializingBean
     private ServerBootstrap bootstrap;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
-    private Channel channel;
     private ApplicationContext applicationContext;
 
     private boolean inited;
@@ -83,7 +76,7 @@ public class RpcNettyServer implements ApplicationContextAware, InitializingBean
             }
         }
         LOGGER.info("afterPropertiesSet, serviceMap is:{}", serviceMap);
-        serviceHandlerManager.init();
+        serviceHandlerManager.init(serviceMap);
         dispatcher = new RpcDispatcher(serviceHandlerManager);
         start();
     }
@@ -108,10 +101,10 @@ public class RpcNettyServer implements ApplicationContextAware, InitializingBean
 
             ChannelFuture f = bootstrap.bind(port).sync();
             LOGGER.warn("RpcNettyServer bind port {} success", port);
-            channel = f.channel();
+            //Channel channel = f.channel();
             // 注册service到zookeeper
             for (Map.Entry<String, Object> service : serviceMap.entrySet()) {
-                rpcServiceRegister.registerToZk(NetworkUtil.getLocalHostIp(), String.valueOf(port), service.getKey());
+                rpcServiceRegister.registerToZk(NetUtils.getLocalHost(), String.valueOf(port), service.getKey());
             }
         } catch (Exception e) {
             LOGGER.error("Exception when init rpc server, {}", e.getMessage(), e);

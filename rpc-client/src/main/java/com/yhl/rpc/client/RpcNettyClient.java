@@ -2,10 +2,10 @@ package com.yhl.rpc.client;
 
 import com.yhl.rpc.common.NettyChannel;
 import com.yhl.rpc.common.RpcFuture;
-import com.yhl.rpc.common.RpcMessageDecoder;
-import com.yhl.rpc.common.RpcMessageEncoder;
-import com.yhl.rpc.common.RpcServiceRequest;
-import com.yhl.rpc.common.RpcServiceResponse;
+import com.yhl.rpc.common.codec.RpcMessageDecoder;
+import com.yhl.rpc.common.codec.RpcMessageEncoder;
+import com.yhl.rpc.common.model.RpcServiceRequest;
+import com.yhl.rpc.common.model.RpcServiceResponse;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import com.yhl.rpc.common.Constants;
 
 public class RpcNettyClient {
@@ -38,15 +39,15 @@ public class RpcNettyClient {
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
         bootstrap.option(ChannelOption.TCP_NODELAY, true);
         bootstrap.group(group)
-        .channel(NioSocketChannel.class)
-        .handler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new RpcMessageEncoder());
-                ch.pipeline().addLast(new RpcMessageDecoder(1024, 0, 4, RpcServiceResponse.class));
-                ch.pipeline().addLast(new RpcNettyClientHandler());
-            }
-        });
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new RpcMessageEncoder());
+                        ch.pipeline().addLast(new RpcMessageDecoder(1024, 0, 4, RpcServiceResponse.class));
+                        ch.pipeline().addLast(new RpcNettyClientHandler());
+                    }
+                });
     }
 
     public void doConnect() throws Throwable {
@@ -71,7 +72,7 @@ public class RpcNettyClient {
             } else if (future.cause() != null) {
                 throw future.cause();
             } else {
-                throw new TimeoutException("connect " + getConnectAddress()+ "failed!");
+                throw new TimeoutException("connect " + getConnectAddress() + "failed!");
             }
         } finally {
             if (channel != null && !channel.isActive()) {
